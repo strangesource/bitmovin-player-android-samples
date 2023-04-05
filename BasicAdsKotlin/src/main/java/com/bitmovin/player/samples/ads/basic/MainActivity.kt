@@ -1,6 +1,7 @@
 package com.bitmovin.player.samples.ads.basic
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bitmovin.player.PlayerView
@@ -61,6 +62,20 @@ class MainActivity : AppCompatActivity() {
 
         // Add PlayerView to the layout
         binding.root.addView(playerView, 0)
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            playerView.player?.let { player ->
+                if (event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER || event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if (!player.isPlaying && player.isAd) {
+                        player.play()
+                        return true
+                    }
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onStart() {
